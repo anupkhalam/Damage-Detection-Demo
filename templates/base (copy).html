@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title Page</title>
+    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="../static/style.css" rel="stylesheet" />
+
+
+    <script src="https://use.fontawesome.com/786f841f88.js"></script>
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="wrapper">
+            <div class="row">
+                <div class="column logo-block"> <img src="/static/experion_logo.svg"><span>Digitally Driven</span></div>
+                <div class="column text-color" style="text-align: right;">
+                    <h3>Damage Analysis Demo</h3>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+
+            <div class="card-body">
+                <div class="row p-2 card-header">
+                    <div>
+                        <button class="btn btn-primary" name="button" onclick="sendRequest()">DETECT DAMAGE</button>
+                    </div>
+
+                    <div class="radio_block">
+                        <div class="radio">
+                            <input type="radio" name="radio1" id="radio1" value="option1" checked="">
+                            <label for="radio1">
+                                Folder 1
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="radio1" id="radio2" value="option2">
+                            <label for="radio2">
+                                Folder 2
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="radio1" id="radio3" value="option3">
+                            <label for="radio3">
+                                Folder 3
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <input type="radio" name="radio1" id="radio4" value="option4">
+                            <label for="radio4">
+                                Folder 4
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="image-title-wrap">
+                        <button type="button" onclick="removeUpload()" class="remove-image">
+                            <!-- REFRESH<span class="image-title"></span> -->
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+
+                        </button>
+                    </div>
+
+                </div>
+                <div class="area">
+                    <div id="dropZone">
+
+                        <div id="upload-area">
+                            <img src="/static/drag_drop.svg">
+                            <img id="image-upload" src="" />
+                            <input type="file" multiple webkitdirectory id="imgInp" class="file-upload-input"
+                                onchange="readURL(this);" accept="image/*" style="display:none">
+
+                            <h1>DRAG & DROP</h1>
+                            <p>or <a href="#" id="upload-link">Browse</a> image from your folder</p>
+                            <small>(Individual file size limit 1MB)</small>
+
+                        </div>
+
+                        <div class="image-container file-upload-content" id="file-upload-content">
+
+
+                            <span>
+                                <img class="file-upload-image" id="file-upload-image" src="" alt="" />
+
+                            </span>
+
+                            <!-- Loader -->
+                            <div class="block" style="display: none;">
+                                <p class="double">
+                                    <span class="ouro ouro3">
+                                        <span class="left"><span class="anim"></span></span>
+                                        <span class="right"><span class="anim"></span></span>
+                                    </span>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <P class="upload">UPLOAD:</P> -->
+
+                <div id="results">
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <!-- Image Modal -->
+        <div id="myModal" class="modal" style="display:none">
+            <div class="modal_holder">
+                <!-- Image Modal Content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <img src="/static/images.jpg">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $('#upload-link').click(function () { $('#imgInp').trigger('click'); });
+
+        var src = null;
+        var images = {};
+
+        function readURL(input) {
+            if (input.files && input.files.length > 0) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    src = input.files[0]
+                    // console.log('src',src);
+                    $('#upload-area').hide();
+                    //$('.file-upload-image').attr('src', e.target.result);
+                    $('.file-upload-content').show();
+                };
+                //reader.readAsDataURL(input.files[0]);
+                // console.log('input.files[0]',input.files[0])
+                var content = document.getElementById('file-upload-content');
+                [].forEach.call(input.files, function (file) {
+                    var imageReader = new FileReader();
+                    imageReader.onload = function (e) {
+                        var container = document.createElement('div');
+                        container.setAttribute('class', 'card-block');
+
+                        var image = document.createElement('img');
+                        image.setAttribute('src', e.target.result);
+                        image.setAttribute('class', 'file-upload-image file-upload-content-block');
+                        //var span = document.createElement('span');
+                        //span.innerHTML = file.name;
+                        container.appendChild(image);
+                        //container.appendChild(span);
+                        content.appendChild(container);
+                        var fileName = file.name.split('.')[0].replace(' ', '_');
+                        container.setAttribute('id', fileName);
+                        images[fileName] = file;
+                    }
+                    imageReader.readAsDataURL(file);
+                });
+                $('#upload-area').hide();
+                $('.file-upload-content').show();
+            } else {
+                removeUpload();
+            }
+        }
+
+
+        function removeUpload() {
+            $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+            $('.file-upload-content').hide();
+            $('#upload-area').show();
+            location.reload();
+        }
+
+        // providing the drag and drop functionality
+        var el = document.getElementById('dropZone');
+
+        function stop_and_prevent(e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        // function load_images()
+
+        function load_images(files) {
+            //var images = document.getElementById("file-upload-content");
+            var content = document.getElementById('file-upload-content');
+            [].forEach.call(files, function (file) {
+                src = file
+                if (file.type.match('image.*')) {
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        $('#upload-area').hide();
+                        $('.file-upload-content').show();
+                        var container = document.createElement('.file-upload-content-block');
+                        var image = document.createElement('img');
+                        image.setAttribute('src', event.target.result);
+                        image.setAttribute('class', 'file-upload-image');
+                        container.appendChild(image);
+                        //var span = document.createElement('span');
+                        //span.innerHTML = file.name;
+                        //container.appendChild(span)
+                        content.appendChild(container);
+                        var fileName = file.name.split('.')[0].replace(' ', '_');
+                        container.setAttribute('id', fileName);
+                        images[fileName] = file;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function onDrop(e) {
+            stop_and_prevent(e);
+            load_images(e.dataTransfer.files);
+            return false;
+        }
+
+        el.addEventListener('dragenter', stop_and_prevent);
+        el.addEventListener('dragover', stop_and_prevent);
+        el.addEventListener('drop', onDrop);
+
+        // $('.file-upload-content').bind('dragenter',function(e){
+        //   e.stopPropagation();
+        //   e.preventDefault();+++
+        // });
+        // $('.file-upload-content').bind('dragover', function (e) {
+        //   e.preventDefault();
+        // 		$('.image-upload-wrap').addClass('image-dropping');
+        // 	});
+        // 	$('.image-upload-wrap').bind('dragleave', function () {
+        // 		$('.image-upload-wrap').removeClass('image-dropping');
+        // });
+
+
+
+        function sendRequest(event) {
+            var formData = new FormData();
+            for (let key in images) {
+                formData.append('file', images[key]);
+            }
+
+            fetch('http://localhost:12000/multiimgdamagedet', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.status === 200)
+                    return response.json()
+                else console.log('response !== 200', response)
+            })
+                .then(data => {
+                    console.log('successs', data)
+                    document.getElementById('results').innerHTML = '';
+                    for (key in data.result) {
+                        var damage = false;
+                        var damagedSections = [];
+                        var container = document.createElement('div');
+                        container.setAttribute('class', 'damage_info');
+                        data.result[key].forEach(function (val, idx) {
+                            if (val['stat'] == 'DAMAGE') {
+                                damage = true;
+                                damagedSections.push(val['cat']);
+                                var statusP = document.createElement('p')
+                                statusP.setAttribute('class', val['stat'] == 'NO DAMAGE' ? 'green' : 'red');
+                                statusP.innerHTML = val['cat'];
+                                container.appendChild(statusP)
+                            }
+                        });
+                        if (!damage) {
+                            var imageWrapper = document.createElement('div');
+                            var img = document.createElement('img');
+                            img.setAttribute('src', '../static/greentick.png');
+                            img.setAttribute('class', 'tick_icon');
+                            imageWrapper.appendChild(img);
+                            var path = key.split('/');
+                            var fileName = path.pop();
+                            document.getElementById(fileName).appendChild(imageWrapper);
+
+                        }
+                        var path = key.split('/');
+                        var fileName = path.pop();
+                        console.log(fileName);
+                        var imageContainer = document.getElementById(fileName)
+                        if (imageContainer)
+                            imageContainer.appendChild(container);
+                    }
+                }).catch((error) => {
+                    console.log('failed', error)
+                })
+        }
+
+    </script>
+</body>
+
+</html>

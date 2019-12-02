@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>../04_project/008_multilabel/dataset_single/test/ceiling_nodam/ad_20190708_ceiling_nodam_12.jpg</file>
+  </qresource>
+</RCC>

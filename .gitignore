@@ -1,0 +1,13 @@
+__pycache__
+dataset_single.zip
+map_dict.xlsx
+map_dict_test.xlsx
+map_dict_train.xlsx
+label_tool/__pycache__
+label_tool/dump/Scoping App - Combinations.xlsx
+label_tool/dump/
+label_tool/confuse/
+label_tool/dataset_single/
+test_dataset.json
+train_dataset.json
+model/
