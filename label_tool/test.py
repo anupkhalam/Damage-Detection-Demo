@@ -12,3 +12,10 @@ with open('train_dataset.pkl', 'rb') as f:
     c= pickle.load(f)
 with open('test_dataset.pkl', 'rb') as f:
     d= pickle.load(f)
+
+from shutil import copyfile
+for i in d:
+    copyfile('dataset_single/new_data/'+i['image_name'], 'dataset_single/test_data/'+i['image_name'])
+    
+    
+    
