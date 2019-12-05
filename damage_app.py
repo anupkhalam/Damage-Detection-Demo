@@ -20,8 +20,9 @@ warnings.filterwarnings("ignore",category=UserWarning)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 MODEL = nw.multi_label_vgg_model(training=True)
-MODEL.load_state_dict(torch.load('model/model_single_v7.pt', map_location='cpu'))
+MODEL.load_state_dict(torch.load('model/model_single_v8.pt', map_location='cpu'))
 MODEL = MODEL.to(device)
+
 
 @app.route('/', methods=['GET','POST'])
 def home_page():
@@ -92,7 +93,7 @@ def damage_det_multi_img():
             result = [(k[0], 'PERIL DAMAGE' if k[1]== 'PERIL' else 'NO DAMAGE') for k in result]
             result_list = []
             if len(result) == 0:
-                return jsonify({result:[{'cat':'NA','stat':'NA'}]})
+                return jsonify({result:[{'cat':'NA','stat':['No Detection']}]})
             for idx, r in enumerate(result):
                 result_disp = {}
                 result_disp['cat'] = result[idx][0]

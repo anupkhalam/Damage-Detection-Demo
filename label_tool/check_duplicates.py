@@ -118,3 +118,28 @@ for i, j in enumerate(train_list):
 #for i in c:
 #    os.remove(i[1])
     
+
+import json
+import glob
+with open('dataset.json', 'rb') as f:
+    k = json.load(f)
+
+a = list(k.keys())
+b = glob.glob('/home/anup/work/multilabel/label_tool/dataset_single/new_data/*.jpg')
+b = [i.split('/')[-1] for i in b]
+
+t={}
+for i in a:
+    if i in b:
+        t[i] = k[i]
+        print (i)
+
+with open('dataset_v1.json', 'w') as w:
+    json.dump(t, w)
+
+
+
+
+
+
+

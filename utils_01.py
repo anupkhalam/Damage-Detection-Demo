@@ -582,15 +582,24 @@ def test_mlable_api(model, image_list, device):
     model.eval()
     class_label_dict = load_dict('class_label_dict')
     for file in image_list: # Expecting only one file in image_list
-        image = image_loader(file)
-        output = model(image.to(device))
-        output_cpu = output.squeeze(0)
+        with torch.no_grad():
+            image = image_loader(file)
+            output = model(image.to(device))
+        output_cpu = output.squeeze(0).cpu()
 
-        arg_max = torch.argmax(output_cpu)
-        output_cpu[arg_max] = 1
-        output_cpu[output_cpu < 0] = 0
-        output_cpu[output_cpu > 0] = 1
-        det_comp = torch.nonzero(output_cpu.squeeze(0)==1.).view(1,-1)[0].tolist()
+#        arg_max = torch.argmax(output_cpu)
+#        output_cpu[arg_max] = 1
+#        output_cpu[output_cpu < 0] = 0
+#        output_cpu[output_cpu > 0] = 1
+#        det_comp = torch.nonzero(output_cpu.squeeze(0)==1.).view(1,-1)[0].tolist()
+        k = output_cpu.numpy()
+        output_cpu_tanh = torch.tanh(output_cpu)
+        arg_max = torch.argmax(output_cpu_tanh)
+        output_cpu_tanh[arg_max] = 1
+        output_cpu_tanh[output_cpu_tanh > -0.75] = 1
+        output_cpu_tanh[output_cpu_tanh < -0.75] = 0
+        det_comp = torch.nonzero(output_cpu_tanh.squeeze(0)==1.).view(1,-1)[0].tolist()
+        
 #        if not det_comp:
 #            output_cpu[max(output_cpu)] = 1
 #            output_cpu[output_cpu < 0] = 0

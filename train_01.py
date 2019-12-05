@@ -27,12 +27,12 @@ print("Device :", device)
 # =============================================================================
 # Defining Parameters
 # =============================================================================
-VERSION = 7
+VERSION = 8
 EPOCHS = 100
 BATCH_SIZE = 8
 LEARNING_RATE = 0.001
-TRAIN_DATA_PATH = "/home/anup/work/multilabel/label_tool/dataset_single/data/"
-TEST_DATA_PATH = "/home/anup/work/multilabel/label_tool/dataset_single/data/"
+TRAIN_DATA_PATH = "/home/anup/work/multilabel/label_tool/dataset_single/new_data/"
+TEST_DATA_PATH = "/home/anup/work/multilabel/label_tool/dataset_single/new_data/"
 
 transformed_dataset = MultiLabelDataset(img_file = '/home/anup/work/multilabel/label_tool/train_dataset.pkl',
                                         root_dir = TRAIN_DATA_PATH,
